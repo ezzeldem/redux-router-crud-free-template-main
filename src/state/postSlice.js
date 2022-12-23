@@ -16,15 +16,17 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
-export const deletePost = createAsyncThunk("", async (data, thunkAPI) => {
+export const deletePost = createAsyncThunk("", async (name, thunkAPI) => {
   const { rejectWithValue } = thunkAPI;
-  const apiLink = "https://api.publicapis.org/entries";
+  const apiLink = `https://api.publicapis.org/entries/${name}`;
 
   try {
-    await fetch(apiLink.entries, {
+    const res = await fetch(apiLink.entries, {
       method: "DELETE",
     });
-    return data;
+    const data = await res.json();
+    return data.entries;
+    // return data;
   } catch (error) {
     return rejectWithValue(error.message);
   }
@@ -56,7 +58,10 @@ const postSlice = createSlice({
     },
     [deletePost.fulfilled]: (state, action) => {
       state.loading = false;
-      state.records = state.records.filter((el) => el.id !== action.payload.id);
+      // state.records = state.records.filter((x, index) => index !== action.index);
+      state.records = state.records.filter(
+        (el) => action.payload.API !== el.API
+      );
     },
     [deletePost.rejected]: (state, action) => {
       state.loading = false;
