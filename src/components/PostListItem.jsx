@@ -4,7 +4,6 @@ const PostList = ({ data, loading, error, deleteRecored }) => {
   const [allPosts, setAllPosts] = useState(data);
 
   const deletePost = (indexVal) => {
-    // debugger;
     const newData = [...data];
     if (indexVal !== -1) {
       newData.splice(indexVal, 1);
